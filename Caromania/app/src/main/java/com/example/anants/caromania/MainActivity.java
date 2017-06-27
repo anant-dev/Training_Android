@@ -1,15 +1,14 @@
+/**
+ * this file is for second activity i.e the main activity
+ */
 package com.example.anants.caromania;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Base64;
 import android.util.Log;
@@ -28,33 +27,33 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
-import android.content.Intent;
-import android.database.Cursor;
+
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    /**
+     * this class provides various methods and variables to handle main activity
+     */
 
-    static ImageView mCarImage;
-    EditText mCarTitle;
-    EditText mAboutCar;
-    EditText mEngineDisplacement;
-    EditText mMaximumPower;
-    EditText mMaximumTorque;
-    EditText mTopSpeed;
-    EditText mAcceleration;
-    SharedPreferences pref;
-    SharedPreferences.Editor editor;
-    Button bEdit;
-    Button bSave;
-    ImageButton imgEdit;
+    private ImageView mCarImage;
+    private EditText mCarTitle;
+    private EditText mAboutCar;
+    private EditText mEngineDisplacement;
+    private EditText mMaximumPower;
+    private EditText mMaximumTorque;
+    private EditText mTopSpeed;
+    private EditText mAcceleration;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private Button mEditButton;
+    private Button mSaveButton;
+    private RelativeLayout main;
     private static final int SELECT_PICTURE = 100;
-    RelativeLayout main;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,15 +69,21 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         // function call to initilise all the widgets
         init();
+
         // Code to hide the keyboard
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        this.getWindow().setSoftInputMode(WindowManager
+                .LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         //defining shared preferences
         pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
         editor = pref.edit();
+
         //making Edit text ---> uneditable
         unedit();
+
         // Setting the content from the shared preference if stored
         try {
             getPref();
@@ -86,48 +91,44 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        //edit button onClick listner
-        bEdit.setOnClickListener(new View.OnClickListener() {
+        //edit button onClick listener
+        mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 edit();
-                bSave.setVisibility(View.VISIBLE);
-                bEdit.setVisibility(View.GONE);
+                mSaveButton.setVisibility(View.VISIBLE);
+                mEditButton.setVisibility(View.GONE);
             }
         });
 
-        //save button onClick listner
-        bSave.setOnClickListener(new View.OnClickListener() {
+        //save button onClick listener
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setPref();
                 getPref();
                 unedit();
-                bSave.setVisibility(View.GONE);
-                bEdit.setVisibility(View.VISIBLE);
-                Snackbar.make(main,getResources().getString(R.string.saved),Snackbar.LENGTH_LONG).show();
+                mSaveButton.setVisibility(View.GONE);
+                mEditButton.setVisibility(View.VISIBLE);
+                Snackbar.make(main,getResources().getString(R.string.saved),
+                        Snackbar.LENGTH_LONG).show();
             }
         });
-
-
-
-
-
     }
-    //initialising all the widgets
+
+    /*initialising all the widgets*/
     private void init() {
-        mCarImage=(ImageView) findViewById(R.id.imageView2);
-        mCarTitle=(EditText) findViewById(R.id.carTitle);
-        mAboutCar=(EditText) findViewById(R.id.aboutCar);
-        mEngineDisplacement=(EditText) findViewById(R.id.enginedisplacement);
-        mMaximumPower=(EditText) findViewById(R.id.maximumpower);
-        mMaximumTorque=(EditText) findViewById(R.id.maximumtorque);
-        mTopSpeed=(EditText) findViewById(R.id.topspeed);
-        mAcceleration=(EditText) findViewById(R.id.acceleration);
-        bEdit=(Button) findViewById(R.id.editButton);
-        bSave=(Button) findViewById(R.id.saveButton);
-        imgEdit=(ImageButton) findViewById(R.id.imageEditButton);
-        main=(RelativeLayout) findViewById(R.id.mainLayout);
+        mCarImage = (ImageView) findViewById(R.id.imageView2);
+        mCarTitle = (EditText) findViewById(R.id.carTitle);
+        mAboutCar = (EditText) findViewById(R.id.aboutCar);
+        mEngineDisplacement = (EditText) findViewById(R.id.enginedisplacement);
+        mMaximumPower = (EditText) findViewById(R.id.maximumpower);
+        mMaximumTorque = (EditText) findViewById(R.id.maximumtorque);
+        mTopSpeed = (EditText) findViewById(R.id.topspeed);
+        mAcceleration = (EditText) findViewById(R.id.acceleration);
+        mEditButton = (Button) findViewById(R.id.editButton);
+        mSaveButton = (Button) findViewById(R.id.saveButton);
+        main = (RelativeLayout) findViewById(R.id.mainLayout);
     }
 
     @Override
@@ -165,17 +166,17 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        /*Handle navigation view item clicks here*/
         int id = item.getItemId();
-
         if (id == R.id.nav_home ) {
-            // Handle the camera action
-        } else if (id == R.id.nav_logout) {
+            /*Handle the camera action*/
+        }else if (id == R.id.nav_logout) {
             editor.putString("flag","0");
             editor.commit();
             Intent i=new Intent(this,Login.class);
             startActivity(i);
-            Toast.makeText(this,getResources().getString(R.string.logout_successfull),Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getResources().getString(R.string.logout_successfull),
+                    Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -184,30 +185,25 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
-
-
-
-    // method to convert bitmap into base64 string
-    public static String encodeTobase64() {
-        Bitmap immage=((BitmapDrawable) mCarImage.getDrawable()).getBitmap();
+    /*method to convert bitmap into base64 string*/
+    public String encodeTobase64() {
+        Bitmap immage = ((BitmapDrawable) mCarImage.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         immage.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
-
         Log.d("Image Log:", imageEncoded);
         return imageEncoded;
     }
 
-    // method to convert base64 string to bitmap
-    public static Bitmap decodeBase64(String input) {
+    /*method to convert base64 string to bitmap*/
+    public Bitmap decodeBase64(String input) {
         byte[] decodedByte = Base64.decode(input, 0);
         return BitmapFactory
                 .decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
-    //function to make Edit Text --> uneditable
+    /*function to make Edit Text --> uneditable*/
     public void unedit(){
         mCarTitle.setEnabled(false);
         mAboutCar.setEnabled(false);
@@ -218,7 +214,7 @@ public class MainActivity extends AppCompatActivity
         mTopSpeed.setEnabled(false);
     }
 
-    // function to make Edit Text --> editable
+    /*function to make Edit Text --> editable*/
     public void edit(){
         mCarTitle.setEnabled(true);
         mAboutCar.setEnabled(true);
@@ -229,11 +225,12 @@ public class MainActivity extends AppCompatActivity
         mTopSpeed.setEnabled(true);
     }
 
-    // function to get data from the view and save it in the shared preference
+    /*function to get data from the view and save it in the shared preference*/
     public void setPref(){
         editor.putString("carTitle",mCarTitle.getText().toString());
         editor.putString("aboutCar",mAboutCar.getText().toString());
-        editor.putString("engineDisplacement",mEngineDisplacement.getText().toString());
+        editor.putString("engineDisplacement",
+                mEngineDisplacement.getText().toString());
         editor.putString("maximumPower",mMaximumPower.getText().toString());
         editor.putString("maximumTorque",mMaximumTorque.getText().toString());
         editor.putString("topspeed",mTopSpeed.getText().toString());
@@ -241,7 +238,7 @@ public class MainActivity extends AppCompatActivity
         editor.commit();
     }
 
-    //function to get data from shared preference and setting it in the view
+    /*function to get data from shared preference and setting it in the view*/
     public void getPref(){
         mCarTitle.setText(pref.getString("carTitle",""));
         mAboutCar.setText(pref.getString("aboutCar",""));
@@ -250,24 +247,26 @@ public class MainActivity extends AppCompatActivity
         mMaximumPower.setText(pref.getString("maximumPower",""));
         mAcceleration.setText(pref.getString("acceleration",""));
         mTopSpeed.setText(pref.getString("topspeed",""));
-        mCarImage.setImageBitmap(decodeBase64(pref.getString("imagePreferance","")));
+        mCarImage.setImageBitmap(decodeBase64(
+                pref.getString("imagePreferance","")));
     }
 
-    //function to select image from gallery
-    public void openImageChooser( View view) {
+    /*function to select image from gallery*/
+    public void openImageChooser(View view) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        startActivityForResult(Intent.createChooser(intent,
+                "Select Picture"), SELECT_PICTURE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
-                // Get the url from data
+                /*Get the url from data*/
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
-                    //setting the image in imageView and saving it in base64 coding in shared Preference
+                    /*setting the image in imageView and saving it in base64 coding in shared Preference*/
                     mCarImage.setImageURI(selectedImageUri);
                     editor.putString("imagePreferance", encodeTobase64());
                     editor.commit();
